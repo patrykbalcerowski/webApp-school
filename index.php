@@ -7,7 +7,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
-<body>
+<body class="index-body">
 <?php
 session_start();
 echo '<pre>';
@@ -18,15 +18,15 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']===true){
     exit();
 }
 ?>
-<div class="login">
+<div class="login-index">
   <h1>Login</h1>
   <form id="login-form" method="POST">
     <label>ID Firmy:</label>
-    <input  class="logininput" type="text" name="id" min="1" max="500" id="id" required>
+    <input  class="login-index" type="text" name="id" min="1" max="500" id="id" required>
     <label>Username:</label>
-    <input  class="logininput" type="text" name="username" id="username" required>
+    <input  class="login-index" type="text" name="username" id="username" required>
     <label>Password:</label>
-    <input class="logininput" type="password" name="password" id="password" required>
+    <input class="login-index" type="password" name="password" id="password" required>
     <button type="submit" name="login">Login</button>
   </form>
   <p>Don't have an account? <a href="register.html">Register here</a></p>

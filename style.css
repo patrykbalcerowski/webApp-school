@@ -1,12 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Lato);
 
-body {
+body.index-body{
     font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
+    background-color: #cfcfcf;
     font-size: large;
 }
 
-.login {
+.login-index{
     margin: 10% auto 50px;
     width: 40%;
     background-color: lightgray;
@@ -15,12 +15,12 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
-.login.passwordhint{
+.login-index passwordhint{
     padding-top: -20px;
         background-color: #3e8e41;
 }
 
-.login.h1 {
+.login-index h1 {
     text-align: center;
     color: #333;
 }
@@ -30,16 +30,16 @@ label {
     margin-bottom: 10px;
 }
 
-input[type="text"] .logininput, input[type="password"] .logininput{
+.login-index input[type="text"], .login-index input, input[type="password"], .login-index input{
     width: 100%;
-    padding: 10px;
+    margin: 0 0 4px;
     border: none;
-    border-radius: 5px;
-    margin-bottom: 20px;
+    border-radius: 10px;
     box-sizing: border-box;
+    height: 40px;
 }
 
-button[type="submit"] {
+.login-index button[type="submit"] {
     background-color: #4CAF50;
     color: #fff;
     border: none;
@@ -49,11 +49,11 @@ button[type="submit"] {
 }
 
 
-button[type="submit"]:hover {
+.login-index button[type="submit"]:hover {
     background-color: #3e8e41;
 }
 
-.login.a {
+.login-index a {
     color: #333;
     text-decoration: none;
 }
@@ -61,7 +61,7 @@ button[type="submit"]:hover {
 a:hover {
     color: #4CAF50;
 }
-.login.passwordhint{
+.login-index passwordhint{
      padding-top: -20px;
      background-color: #3e8e41;
  }
@@ -153,6 +153,7 @@ ul {
     list-style-type: none;
 }
 ul li {
+    margin-top: 5px;
     padding: 8px 120px;
     padding-bottom: 10vh;
 }
@@ -230,10 +231,11 @@ img{
 }
 .products{
     width: 100vw;
-    height: auto;
+    height: 90vh;
     background-color: white;
     display: block;
     text-align: center;
+    overflow: auto;
 }
 .product{
     display: inline-block;

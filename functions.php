@@ -14,7 +14,7 @@ $staffName = pg_fetch_result($result,0,0);
 $staffsurName = pg_fetch_result($result,0,1);
 $staffphoneNumber = pg_fetch_result($result,0,2);
 $staffemail = pg_fetch_result($result,0,3);
-$result = pg_query($link, "SELECT TOP 30 \"productName\", \"unitPrize\", \"img\" FROM products as p JOIN \"shoppingCart\" as s on p.\"productCode\"=s.\"productCode\" JOIN \"users\" as u on s.\"userID\"=u.\"userID\"  WHERE \"userID\" = '$userID';");
+$result = pg_query($link, "SELECT \"productName\", \"unitPrize\", \"img\" FROM products as p JOIN \"shoppingCart\" as s on p.\"productCode\"=s.\"productCode\" JOIN \"users\" as u on s.\"userID\"=u.\"userID\"  WHERE s.\"userID\" = '$userID';");
 $products = pg_query($link,"SELECT * FROM products LIMIT 30;");
 
 //if(!$result){
