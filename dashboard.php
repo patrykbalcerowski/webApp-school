@@ -52,11 +52,39 @@
             <div class="koszyk">
                 <i class="fa fa-shopping-cart" aria-hidden="true" style="color: orangered;font-size: 45px"></i>
                 <div style="display: inline-block">
-                    <p>1</p>
+                    <p><?php echo "$shopCartCount" ?></p>
                     <p style="margin-top: -20px">Koszyk</p>
                 </div>
+                <div class="koszyk-content">
+                    <div class="products-cart">
+                        <?php
+                        $i = 0;
+                        while ($row = pg_fetch_assoc($shopCart)) {
+                            echo "<div class='product-cart'>";
+                            echo "<img class='produkty-cart' src='pictures/". $row['img'] . "' alt='Product Image'>";
+                            echo "<div class='product-details'>";
+                            echo "<h2>" . $row['productName'] . "</h2>";
+                            echo "<div class='cena-cart'>";
+                            echo "<p>Cena: " . $row['unitPrize'] . " zł</p>";
+                            echo "<div class='cena-ilosc' >";
+                            echo "<p>Ilość: " . $row['unitCount'] . "</p>";
+                            echo "<p style='paddingn-right: auto;padding-left: 60px;margin-top: -20px'>Wartość: " . ($row['unitCount'] * $row['unitPrize']) . "</p>";
+                            echo "
+<button class='cartinproduct' style='height:45px' onclick='removeFromCart(" . $row['cartID'] . ")'>
+        <i class='fa fa-times' style='font-size: 24px;margin-left: 50px;margin-top: -20px' aria-hidden='true'></i>
+    </button>
 
+";
+                            echo "</div>";
+                            echo "</div>";
 
+                            echo "</div>";
+                            echo "</div>";
+                            $i++;
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
             <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 45px;color: orangered; padding-left: 60px;display: inline-block"></i>
             <div class="klient" style="display: inline-block">
@@ -83,25 +111,29 @@
             </ul>
         </div>
         <div class="products">
-            <?php  $i = 0;
-            echo "<div class='row'>"; // Start the first row
+            <?php
+            $i = 0;
+            echo "<div class='row'>";
             while ($row = pg_fetch_assoc($products)) {
                 if ($i % 4 == 0 && $i != 0) {
-                    echo "</div><div class='row'>"; // Close the previous row and start a new row after every third product
+                    echo "</div><div class='row'>";
                 }
-                echo "<div class='product'>"; // Create a column for each product
+                echo "<div class='product'>";
                 echo "<h2 class='product' style='width: 100%'>" . $row['productName'] . "</h2>";
                 echo "<div class='zdjecia' style='width: 300px;height: 300px'><img class='produkty' src='pictures/". $row['img'] . "' alt='Product Image'></div>";
                 echo "<div class='cena'>
-                 <p class='product'>Cena: " . $row['unitPrize'] . " zł</p>
-                <p class='product'>Dostępna ilość: " . $row['onStock'] . "</p>
-                </div>";
-                echo "<i class='fa fa-cart-plus' aria-hidden='true' style='font-size: 30px;vertical-align:18px; margin-bottom: 20px'></i>";
+        <p class='product'>Cena: " . $row['unitPrize'] . " zł</p>
+        <p class='product'>Dostępna ilość: " . $row['onStock'] . "</p>
+    </div>";
+                echo "<button class='cartinproduct' style='height:45px' onclick='addToCart(" . $row['productCode'] . ")'>
+        <i class='fa fa-cart-plus' aria-hidden='true' style='font-size: 30px;vertical-align:18px; margin-bottom: 20px'></i>
+    </button>";
 
                 echo "</div>";
                 $i++;
             }
-            echo "</div>"; ?>
+            echo "</div>";
+            ?>
     </div>
 
         <div class="product">
@@ -110,7 +142,43 @@
     </div>
 
 </div>
+    <script>
+        function addToCart(productCode) {
+
+            $.ajax({
+                url: 'add_to_cart.php',
+                type: 'POST',
+                data: { productCode: productCode },
+                success: function(response) {
+                    console.log(response);
+                    window.location.reload(true);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+
+                }
+            });
+        }
+    </script><
+    <script>
+        function removeFromCart(cartID) {
+            console.log(cartID);
+
+            $.ajax({
+                url: 'remove_from_cart.php',
+                type: 'POST',
+                data: { cartID: cartID },
+                success: function(response) {
+                    console.log(response);
+                    window.location.reload(true);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+
+                }
+            });
+        }
+    </script>
 </body>
-</body>
-</head>
+
 </html>

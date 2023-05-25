@@ -10,22 +10,22 @@
 <body class="index-body">
 <?php
 session_start();
-echo '<pre>';
-var_dump($_SESSION);
-echo '</pre>';
 if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']===true){
     header("location: dashboard.php");
     exit();
 }
 ?>
-<div class="login-index">
+<div class="login-logo"  style="display: block">
+<p>Hurtownia u Patryka</p>
+</div>
+<div class="login-index" style="display:block;">
   <h1>Login</h1>
   <form id="login-form" method="POST">
     <label>ID Firmy:</label>
     <input  class="login-index" type="text" name="id" min="1" max="500" id="id" required>
-    <label>Username:</label>
+    <label>Nazwa użytkownika:</label>
     <input  class="login-index" type="text" name="username" id="username" required>
-    <label>Password:</label>
+    <label>Hasło:</label>
     <input class="login-index" type="password" name="password" id="password" required>
     <button type="submit" name="login">Login</button>
   </form>
@@ -34,9 +34,8 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']===true){
 <script>
   $(document).ready(function() {
     $('#login-form').submit(function(event) {
-      event.preventDefault(); // Prevent default form submission
+      event.preventDefault();
 
-      // Get form data
       var username = $('#username').val();
       var password = $('#password').val();
       var id = $('#id').val();
@@ -48,10 +47,10 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']===true){
         dataType: 'json',
         success: function(response) {
           if (response.success) {
-            // Login successful
+
             window.location.href = 'dashboard.php';
           } else {
-            // Login failed
+
             alert('Invalid username or password.');
           }
         },

@@ -14,8 +14,11 @@ $staffName = pg_fetch_result($result,0,0);
 $staffsurName = pg_fetch_result($result,0,1);
 $staffphoneNumber = pg_fetch_result($result,0,2);
 $staffemail = pg_fetch_result($result,0,3);
-$result = pg_query($link, "SELECT \"productName\", \"unitPrize\", \"img\" FROM products as p JOIN \"shoppingCart\" as s on p.\"productCode\"=s.\"productCode\" JOIN \"users\" as u on s.\"userID\"=u.\"userID\"  WHERE s.\"userID\" = '$userID';");
+$shopCart = pg_query($link, "SELECT \"productName\", \"unitPrize\", \"img\", \"unitCount\", \"cartID\" FROM products as p JOIN \"shoppingCart\" as s on p.\"productCode\"=s.\"productCode\" JOIN \"users\" as u on s.\"userID\"=u.\"userID\"  WHERE s.\"userID\" = '$userID';");
+$row = pg_query($link, "SELECT COUNT(\"cartID\") as num FROM products as p JOIN \"shoppingCart\" as s on p.\"productCode\"=s.\"productCode\" JOIN \"users\" as u on s.\"userID\"=u.\"userID\"  WHERE s.\"userID\" = '$userID';");
+$shopCartCount = pg_fetch_result($row,0,0);
 $products = pg_query($link,"SELECT * FROM products LIMIT 30;");
+
 
 //if(!$result){
 //    $response = array('success' => false);
