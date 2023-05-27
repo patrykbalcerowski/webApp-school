@@ -250,9 +250,9 @@ img{
     width: auto;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
-    max-height: 500px;
-    overflow: auto;
     margin-right: 900px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
 
 }
 .koszyk:hover .koszyk-content {display: block;}
@@ -365,4 +365,21 @@ button.cartinproduct{
 }button.cartinproduct:hover{
     cursor: pointer;
 }
+ .products-cart{
+     max-height: 500px;
+     overflow: auto;
+ }
+
+ button.koszyk-stopka{
+     height: 40px;
+     margin: 5px;
+     width: 200px;
+     background-color: #e0e0e0;
+     border-radius: 10px;
+     border-color: #cfcfcf;
+     box-shadow: 0 0 10px black;
+ }
+ .message-container{
+
+ }
 
