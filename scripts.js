@@ -1,9 +1,20 @@
 // przechwytywanie buttona
-src="https://code.jquery.com/jquery-3.7.0.js"
     document.getElementById('search-button').addEventListener('click', function() {
     var searchQuery = document.getElementById('search-input').value;
     searchProducts(searchQuery);
 });
+$(document).ready(function() {
+
+    $('.search__input').keydown(function(event) {
+        if (event.keyCode == 13) {
+            var searchQuery = document.getElementById('search-input').value;
+            searchProducts(searchQuery);
+            return false;
+        }
+    });
+
+});
+
 
 // wyszukaj produkty
 function searchProducts(query) {

@@ -3,10 +3,12 @@ require_once "config.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $query = $_GET['query'];
+    $query = strtolower($query);
+    $query = pg_escape_string($query);
 
-    // Perform the search based on the query
-    // You can modify this part according to your search logic
-    $searchResults = pg_query($link, "SELECT * FROM products WHERE \"productName\" LIKE '%$query%'");
+    $sql = "SELECT * FROM products WHERE LOWER(\"productName\") LIKE '%' || $1 || '%'";
+    $params = array($query);
+    $searchResults = pg_query_params($link, $sql, $params);
 
     if (pg_num_rows($searchResults)>0) {
         // Display the search results

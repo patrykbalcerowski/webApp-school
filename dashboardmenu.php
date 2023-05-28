@@ -29,6 +29,7 @@ require_once "functions.php";
         </div>
         <div class="wyszukiwarka">
             <input id="search-input" class="search__input" type="text" placeholder="Wyszukaj">
+            <input id="search-input2" type="submit" hidden />
             <i id="search-button" class="fa fa-search" aria-hidden="true" style="color: orangered; cursor: pointer;"></i>
         </div>
         <div class="koszyk">
