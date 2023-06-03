@@ -69,20 +69,34 @@ require_once "functions.php";
                 </div>
             </div>
         </div>
-        <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 45px;color: orangered; padding-left: 60px;display: inline-block"></i>
+
         <div class="klient" style="display: inline-block">
+            <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 45px;color: orangered; padding-left: 60px;display: inline-block"></i>
             <div style="display: inline-block">
                 <p style="padding-left: 5px; display: inline-block;margin: auto">
                     <?php echo $firstname, " "?></p>
                 <p style="padding-left: 5px; margin: auto; display: block">
                     <?php echo $lastname?></p>
             </div>
+            <div class="klient-content">
+                <ul style="padding-left: 10px;flex-direction: column;align-items: center" class="menu">
+                    <li style="padding: 0 10px 0 0;"><a href="profile.php">Moje konto</a></li>
+                    <?php if ($hasPermission) { ?>
+                        <li style="padding: 0 10px 0 0"><a href="manage.php">Zarządzaj firmą</a></li>
+                        <?php if ($isAdmin) { ?>
+                            <li style="padding: 0 10px 0 0"><a href="admin.php">Panel administratora</a></li>
+                        <?php } ?>
+                    <?php } ?>
+                    <li style="padding: 0 10px 0 0;"><a href="logout.php">Wyloguj</a></li>
+                </ul>
+            </div>
         </div>
+
     </div>
 </div>
 <div class="navbar">
     <ul>
-        <li style="display: inline"><a href="#">Strona główna</a></li>
+        <li style="display: inline"><a href="dashboard.php">Strona główna</a></li>
         <li style="display: inline"><a href="#">Zamówienia</a></li>
         <li style="display: inline"><a href="#">Kategorie</a></li>
         <li style="display: inline"><a href="#">Informacje</a></li>

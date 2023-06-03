@@ -103,6 +103,7 @@ a:hover {
     border-bottom-style: solid;
     border-bottom-width: 2px;
     border-bottom-color: #e0e0e0;
+
 }
 
 body.dashboardbody {
@@ -166,8 +167,7 @@ ul {
 }
 ul li {
     margin-top: 5px;
-    padding: 8px 120px;
-    padding-bottom: 10vh;
+    padding: 8px 120px 10vh;
 }
 ul li a {
     position: relative;
@@ -259,11 +259,11 @@ img{
 
 .products{
     width: 100vw;
-    height: 90vh;
+    height: 100vh;
     background-color: white;
     display: block;
     text-align: center;
-    overflow: auto;
+    margin-top: 230px;
 }
 .product{
     display: inline-block;
@@ -298,6 +298,16 @@ p.product{
     width: auto;
     padding-left: 5px;
 }
+.klient-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: auto;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    margin-left: 50px;
+}
+.klient:hover .klient-content {display: block;}
 h2.product{
     font-family: Lato, sans-serif;
     font-size: 25px;
@@ -382,4 +392,20 @@ button.cartinproduct{
  .message-container{
 
  }
+ .includedFileContainer{
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100%;
+     z-index: 9999;
+     background-color: #f6f6f6;
+     border-bottom-style: solid;
+     border-bottom-width: 2px;
+     border-bottom-color: #e0e0e0;
+ }
+ a{
+     color: inherit;
+ }
+
+
 

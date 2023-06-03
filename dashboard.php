@@ -22,10 +22,9 @@
 
 <body class="dashboardbody">
 <div class="container">
-    <div id="includedFileContainer">
+    <div class="includedFileContainer" id="includedFileContainer">
     <?php include 'dashboardmenu.php'; ?>
     </div>
-    <div class="strona">
         <div class="products">
             <?php
             $i = 0;
@@ -35,15 +34,18 @@
                     echo "</div><div class='row'>";
                 }
                 echo "<div class='product'>";
+                // Wrap product name in an anchor tag with the product details page URL
+                echo "<a href='product_details.php?productCode=" . $row['productCode'] . "' class='product-link'>";
                 echo "<h2 class='product' style='width: 100%'>" . $row['productName'] . "</h2>";
                 echo "<div class='zdjecia' style='width: 300px;height: 300px'><img class='produkty' src='pictures/". $row['img'] . "' alt='Product Image'></div>";
                 echo "<div class='cena'>
-    <p class='product'>Cena: " . $row['unitPrize'] . " zł</p>
-    <p class='product'>Dostępna ilość: " . $row['onStock'] . "</p>
-</div>";
+            <p class='product'>Cena: " . $row['unitPrize'] . " zł</p>
+            <p class='product'>Dostępna ilość: " . $row['onStock'] . "</p>
+        </div>";
                 echo "<button class='cartinproduct' style='height:45px' onclick='addToCart(" . $row['productCode'] . ")'>
-    <i class='fa fa-cart-plus' aria-hidden='true' style='font-size: 30px;vertical-align:18px; margin-bottom: 20px'></i>
-</button>";
+            <i class='fa fa-cart-plus' aria-hidden='true' style='font-size: 30px;vertical-align:18px; margin-bottom: 20px'></i>
+        </button>";
+                echo "</a>"; // Close the anchor tag
 
                 echo "</div>";
                 $i++;
@@ -52,7 +54,7 @@
             ?>
         </div>
     </div>
-</div>
+
 <script type="text/javascript" src="scripts.js"></script>
 
 </body>
