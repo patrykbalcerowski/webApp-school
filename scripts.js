@@ -85,6 +85,7 @@ function showMessage(message) {
     messageContainer.style.display = "block";
     messageContainer.style.width = "200px";
     messageContainer.style.backgroundColor = "green";
+   messageContainer.style.color="white";
 
     messageContainer.style.borderRadius = "40px";
     messageContainer.style.textAlign = "center";

@@ -114,6 +114,8 @@ body.dashboardbody {
     display: block;
     justify-content: left;
     margin: 3px;
+    font-family: Lato, sans-serif;
+
 }
 .navbar {
     width: 100vw;

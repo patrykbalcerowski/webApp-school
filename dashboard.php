@@ -42,10 +42,11 @@
             <p class='product'>Cena: " . $row['unitPrize'] . " zł</p>
             <p class='product'>Dostępna ilość: " . $row['onStock'] . "</p>
         </div>";
+                echo "</a>";
                 echo "<button class='cartinproduct' style='height:45px' onclick='addToCart(" . $row['productCode'] . ")'>
             <i class='fa fa-cart-plus' aria-hidden='true' style='font-size: 30px;vertical-align:18px; margin-bottom: 20px'></i>
         </button>";
-                echo "</a>"; // Close the anchor tag
+
 
                 echo "</div>";
                 $i++;
