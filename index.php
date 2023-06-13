@@ -29,7 +29,6 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']===true){
     <input class="login-index" type="password" name="password" id="password" required>
     <button type="submit" name="login">Login</button>
   </form>
-  <p>Don't have an account? <a href="register.html">Register here</a></p>
 </div>
 <script>
   $(document).ready(function() {

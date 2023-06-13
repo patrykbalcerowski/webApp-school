@@ -20,7 +20,7 @@ if (!$link) {
 
     $pass_hash = sha1(md5($pass . $pass));
 
-    // Przygotowanie zapytania
+
     $result = pg_query_params($link, "SELECT \"userID\", username, password FROM users WHERE \"companyID\" = $1 AND username = $2", array($id, $login));
 
     if (!$result) {
@@ -37,7 +37,6 @@ if (!$link) {
         return;
     }
 
-    //sprawdzenie hasla
     $hashedPassword = pg_fetch_result($result, 0, 2);
     if (!password_verify($pass, $hashedPassword)) {
         $response = array('success' => false);
@@ -52,4 +51,3 @@ if (!$link) {
     $response = array('success' => true);
     echo json_encode($response);
 }
-?>

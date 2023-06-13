@@ -10,7 +10,7 @@
     }
     require_once "functions.php";
     require_once "config.php";
-    if(!$isAdmin){
+    if (!$isAdmin) {
         header("location: dashboard.php");
     }
     ?>
@@ -27,9 +27,8 @@
 </div>
 <div style="display: flex; flex-direction: row;flex-grow: 2">
     <div style="flex: 2;">
-        <p style="font-family: 'Copperplate Gothic Bold', monospace;font-size: larger;font-weight: bolder;">Dodaj klienta</p>
         <div class="login-index" style="height: auto;width: auto; margin: 10px">
-
+            <p style="font-family: 'Copperplate Gothic Bold', monospace;font-size: larger;font-weight: bolder;">Dodaj klienta</p>
             <label>Nazwa firmy</label>
             <input type="text" id="companyName">
             <label>NIP</label>
@@ -56,15 +55,14 @@
     <div style="flex: 1;">
         <div style="display: flex; flex-direction: column;">
             <div>
-                <p style="font-family: 'Copperplate Gothic Bold', monospace;font-size: larger;font-weight: bolder;">Zmień hasło użytkownika</p>
                 <div class="login-index" style="height: auto; width: auto; margin: 10px">
-
+                    <p style="font-family: 'Copperplate Gothic Bold', monospace;font-size: larger;font-weight: bolder;">Zmień hasło użytkownika</p>
                     <label>Wybierz użytkownika:</label>
                     <select class="custom-select" id="userSelect">
                         <?php
-                        $users = pg_query($link,"SELECT * FROM users;");
+                        $users = pg_query($link,'SELECT "userID", "companyName","username"  FROM users as u join "Customers" as c on c."companyID"=u."companyID" order by "companyName";');
                         while ($row = pg_fetch_assoc($users)) {
-                            echo "<option value='" . $row['userID']. "'>".$row['username']."</option>";
+                            echo "<option value='" . $row['userID']. "'>"."Firma: " . $row['companyName'] . " Użytkownik: " . $row['username']."</option>";
                         }
                         ?>
                     </select>
@@ -76,8 +74,9 @@
                 </div>
             </div>
             <div>
-                <p style="font-family: 'Copperplate Gothic Bold', monospace;font-size: larger;font-weight: bolder;">Usuń klienta</p>
+
                 <div class="login-index" style="height: auto; width: auto; margin: 10px;">
+                    <p style="font-family: 'Copperplate Gothic Bold', monospace;font-size: larger;font-weight: bolder;">Usuń klienta</p>
                     <label>Wybierz firmę:</label>
                     <select class="custom-select" id="deleteCompanySelect">
                         <?php
@@ -94,9 +93,45 @@
     </div>
 </div>
 
+<div>
+    <div class="login-index" style="height: auto;width: 50%; margin: 10px">
+        <p style="font-family: 'Copperplate Gothic Bold', monospace;font-size: larger;font-weight: bolder;">Dodaj użytkownika</p>
+        <label>Username</label>
+        <input type="text" id="username">
+        <label>Password</label>
+        <input type="password" id="password">
+        <div style="width: 200px; display: inline-block">
+            <label>Is Owner</label>
+            <input type="checkbox" id="isOwner">
+        </div>
+        <div style="width: 200px;display: inline-block">
+            <label>Is Administrator</label>
+            <input type="checkbox" id="isAdministrator">
+        </div>
+        <label>E-mail</label>
+        <input type="text" id="email">
+        <label>Phone</label>
+        <input type="text" id="phone">
+        <label>Company:</label>
+        <select class="custom-select" id="companySelect">
+            <?php
+            $companies = pg_query($link,"SELECT * FROM \"Customers\";");
+            while ($row = pg_fetch_assoc($companies)) {
+                echo "<option value='" . $row['companyID']. "'>".$row['companyName']."</option>";
+            }
+            ?>
+        </select>
+        <label>First Name</label>
+        <input type="text" id="firstName">
+        <label>Last Name</label>
+        <input type="text" id="lastName">
+        <button class="admin-panel" style="margin: 0 auto;" id="addUserBtn">DODAJ UŻYTKOWNIKA</button>
+    </div>
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    // AJAX request for adding a customer
+
     $(document).on('click', '#addCustomerBtn', function() {
         var companyName = $('#companyName').val();
         var companyNIP = $('#companyNIP').val();
@@ -117,13 +152,11 @@
                 salespersonID: salespersonID
             },
             success: function(response) {
-                // Handle the response from the server
                 console.log(response);
             }
         });
     });
 
-    // AJAX request for changing a user's password
     $(document).on('click', '#changePasswordBtn', function() {
         var userID = $('#userSelect').val();
         var newPassword = $('#newPassword').val();
@@ -138,13 +171,11 @@
                 confirmPassword: confirmPassword
             },
             success: function(response) {
-                // Handle the response from the server
                 console.log(response);
             }
         });
     });
 
-    // AJAX request for deleting a customer
     $(document).on('click', '#deleteCompanyBtn', function() {
         var companyID = $('#deleteCompanySelect').val();
 
@@ -155,7 +186,38 @@
                 companyID: companyID
             },
             success: function(response) {
-                // Handle the response from the server
+
+                console.log(response);
+            }
+        });
+    });
+
+    $(document).on('click', '#addUserBtn', function() {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var isOwner = $('#isOwner').is(':checked');
+        var isAdministrator = $('#isAdministrator').is(':checked');
+        var email = $('#email').val();
+        var phone = $('#phone').val();
+        var companyID = $('#companySelect').val();
+        var firstName = $('#firstName').val();
+        var lastName = $('#lastName').val();
+
+        $.ajax({
+            url: 'add_user.php',
+            type: 'POST',
+            data: {
+                username: username,
+                password: password,
+                isOwner: isOwner,
+                isAdministrator: isAdministrator,
+                email: email,
+                phone: phone,
+                companyID: companyID,
+                firstName: firstName,
+                lastName: lastName
+            },
+            success: function(response) {
                 console.log(response);
             }
         });
@@ -163,13 +225,14 @@
 </script>
 
 <style>
-    .admin-panel{
+    .admin-panel {
         padding: 12px;
         display: block;
         font-family: "Copperplate Gothic Bold", monospace;
         font-weight: bolder;
     }
-    .custom-select{
+
+    .custom-select {
         position: relative;
         font-family: Arial, sans-serif;
         margin: 0 auto 10px auto;
