@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updatePasswordResult = pg_query_params($link, $updatePasswordQuery, $updatePasswordParams);
 
         if ($updatePasswordResult) {
+            http_response_code(200);
             echo "Haslo zostalo zmienione poprawnie";
         } else {
             echo "Wystapil blad";

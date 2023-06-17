@@ -5,8 +5,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] === false) {
     exit();
 }
 require_once "functions.php";
+require_once "config.php";
+$result = pg_query($link, "SELECT \"isOwner\",\"isAdministrator\"  FROM users WHERE \"userID\" = '$userID';");
+$hasPermission = pg_fetch_result($result,0,0);
+$isAdmin = pg_fetch_result($result,0,1);
+
 ?>
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="scripts.js"></script>
 <div class="naglowek">
     <div class="info">
         <p class="naglowekInfo"><i class="fa fa-user-o" aria-hidden="true"
@@ -53,6 +59,7 @@ require_once "functions.php";
                         echo "<div class='cena-ilosc' >";
                         echo "<p>Ilość: " . $row['unitCount'] . "</p>";
                         echo "<p style='padding-left: 60px;margin-top: -20px'>Wartość: " . ($row['unitCount'] * $row['unitPrize']) . "</p>";
+                        $allValue += ($row['unitCount'] * $row['unitPrize']);
                         echo "<button class='cartinproduct' style='height:45px' onclick='removeFromCart(" . $row['cartID'] . ")'>
                                 <i class='fa fa-times' style='font-size: 24px;margin-left: 50px;margin-top: -20px' aria-hidden='true'></i>
                               </button>";
@@ -65,7 +72,8 @@ require_once "functions.php";
                     ?>
                 </div>
                 <div class="koszyk-stopka">
-                    <button class="koszyk-stopka">Złóż zamówienie</button>
+                    <p style="font-weight: bold;">Suma: <?php echo "$allValue"; ?> zł</p>
+                    <button class="koszyk-stopka" onclick="placeOrder()">Złóż zamówienie</button>
                 </div>
             </div>
         </div>
@@ -81,12 +89,16 @@ require_once "functions.php";
             <div class="klient-content">
                 <ul style="padding-left: 10px;flex-direction: column;align-items: center" class="menu">
                     <li style="padding: 0 10px 0 0;"><a href="profile.php">Moje konto</a></li>
-                    <?php if ($hasPermission) { ?>
-                        <li style="padding: 0 10px 0 0"><a href="manage.php">Zarządzaj firmą</a></li>
-                        <?php if ($isAdmin) { ?>
-                            <li style="padding: 0 10px 0 0"><a href="admin.php">Panel administratora</a></li>
-                        <?php } ?>
-                    <?php } ?>
+                    <?php if ($hasPermission=="t") {
+                        echo"<li style='padding: 0 10px 0 0'><a href='manage.php'>Zarządzaj firmą</a></li>";
+                    }
+                        ?>
+                        <?php if ($isAdmin=="t") {
+                           echo " <li style='padding: 0 10px 0 0'><a href='admin.php'>Panel administratora</a></li>";
+                        }
+                             ?>
+
+
                     <li style="padding: 0 10px 0 0;"><a href="logout.php">Wyloguj</a></li>
                 </ul>
             </div>
@@ -97,9 +109,220 @@ require_once "functions.php";
 <div class="navbar">
     <ul>
         <li style="display: inline"><a href="dashboard.php">Strona główna</a></li>
-        <li style="display: inline"><a href="#">Zamówienia</a></li>
+        <li style="display: inline"><a href="orders.php">Zamówienia</a></li>
+        <div class="mymenu">
         <li style="display: inline"><a href="#">Kategorie</a></li>
+            <div class="categories-menu">
+                <ul class="categories-list" style="padding: 0"></ul>
+            </div>
+        </div>
+
         <li style="display: inline"><a href="#">Informacje</a></li>
         <li style="display: inline"><a href="#">Pomoc</a></li>
     </ul>
 </div>
+<style>
+    .categories-menu {
+        position: relative;
+        width: auto;
+        height: auto;
+    }
+
+
+    .categories-list {
+        display: none;
+        width: 200px;
+        height: 300px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #f6f6f6;
+        max-height: 500px;
+
+
+        /* Additional styling properties */
+    }
+     .mymenu:hover .categories-list{display: block}
+
+
+
+    .categories-list li {
+        /* Additional styling properties */
+    }
+
+    .submenu {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        background-color: white;
+        /* Additional styling properties */
+    }
+
+    .categories-list li:hover .submenu {
+        display: block;
+    }
+
+
+    .submenu li {
+        /* Additional styling properties */
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        // Pobieranie kategorii z bazy danych
+        $.ajax({
+            url: 'get_categories.php',
+            type: 'GET',
+            success: function(response) {
+                var categories = JSON.parse(response);
+                displayCategories(categories);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + error);
+            }
+        });
+
+        // Funkcja wyświetlająca kategorie w menu
+        function displayCategories(categories) {
+            var menu = $('.categories-list');
+            categories.forEach(function(category) {
+                var li = $('<li style="padding: 10px 0 10px 0; margin: 10px 0 10px 0"></li>').appendTo(menu);
+                var a = $('<a style="padding: 0;margin: 0"></a>').attr('href', '#').text(category.name).appendTo(li);
+                a.click(function(e) {
+                    e.preventDefault();
+                    searchProducts1(category.id);
+                });
+
+                // Obsługa zdarzenia najechania na kategorię
+                li.mouseenter(function() {
+                    // Pobieranie podkategorii z bazy danych
+                    $.ajax({
+                        url: 'get_subcategories.php',
+                        type: 'GET',
+                        data: { categoryId: category.id },
+                        success: function(response) {
+                            var subcategories = JSON.parse(response);
+                            displaySubcategories(subcategories, li);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                });
+
+// Obsługa zdarzenia opuszczenia kategorii
+                li.mouseleave(function() {
+                    li.find('.submenu').hide();
+
+                });
+            });
+        }
+
+        // Funkcja wyświetlająca podkategorie w menu
+        function displaySubcategories(subcategories, parentLi) {
+            var submenu = $('<ul style="background-color: #f6f6f6; width: 200px;height:300px;padding: 10px 0 10px 0;margin: 10px 0 10px 0"></ul>').addClass('submenu').appendTo(parentLi);
+
+            subcategories.forEach(function(subcategory) {
+                var li = $('<li style="padding: 10px 0px 10px 0px;margin: 10px 0 10px 0"></li>').appendTo(submenu);
+                var a = $('<a style="padding: 0; margin: 0"></a>').attr('href', '#').text(subcategory.name).appendTo(li);
+                a.click(function(e) {
+                    e.preventDefault();
+                    searchProducts2(subcategory.id);
+                });
+
+                // Obsługa zdarzenia najechania na podkategorię
+
+                a.mouseenter(function() {
+                    // Pobieranie podpodkategorii z bazy danych
+                    $.ajax({
+                        url: 'get_subsubcategories.php',
+                        type: 'GET',
+                        data: { subcategoryId: subcategory.id },
+                        success: function(response) {
+                            var subsubcategories = JSON.parse(response);
+                            displaySubsubcategories(subsubcategories, li);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                });
+
+                // Obsługa zdarzenia opuszczenia podkategorii
+                li.mouseleave(function() {
+                    li.find('.submenu').remove();
+                });
+            });
+        }
+
+        // Funkcja wyświetlająca podpodkategorie w menu
+        function displaySubsubcategories(subsubcategories, parentLi) {
+            var submenu = $('<ul style="background-color: #f6f6f6;width: 200px;height: 300px ;padding: 10px 0 10px 0;margin: 10px 0 10px 0"></ul>').addClass('submenu').appendTo(parentLi);
+
+            subsubcategories.forEach(function(subsubcategory) {
+                var li = $('<li style="padding: 10px 0 10px 0;margin: 10px 0 10px 0"></li>').appendTo(submenu);
+                var a = $('<a style="padding: 0; margin: 0"></a>').attr('href', '#').text(subsubcategory.name).appendTo(li);
+
+                // Obsługa zdarzenia kliknięcia na podpodkategorię
+                a.click(function(e) {
+                    e.preventDefault();
+                    searchProducts3(subsubcategory.id);
+                });
+
+                // Obsługa zdarzenia opuszczenia podpodkategorii
+                li.mouseleave(function() {
+                    li.find('.submenu').remove();
+                });
+            });
+        }
+
+        // Funkcja wyszukująca produkty z danej kategorii
+        function searchProducts1(categoryId) {
+            $.ajax({
+                url: 'search_products.php',
+                type: 'GET',
+                data: { categoryId: categoryId },
+                success: function(response) {
+                    // Handle the search results
+                    var productsContainer = document.querySelector('.products');
+                    productsContainer.innerHTML = response;
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+                }
+            });
+        }
+        function searchProducts2(subcategoryId) {
+            $.ajax({
+                url: 'search_products.php',
+                type: 'GET',
+                data: { subcategoryId: subcategoryId },
+                success: function(response) {
+                    // Handle the search results
+                    var productsContainer = document.querySelector('.products');
+                    productsContainer.innerHTML = response;
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+                }
+            });
+        }
+        function searchProducts3(subsubcategoryId) {
+            $.ajax({
+                url: 'search_products.php',
+                type: 'GET',
+                data: { subsubcategoryId: subsubcategoryId },
+                success: function(response) {
+                    // Handle the search results
+                    var productsContainer = document.querySelector('.products');
+                    productsContainer.innerHTML = response;
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+                }
+            });
+        }
+    });
+</script>
+

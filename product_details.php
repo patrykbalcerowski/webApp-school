@@ -19,7 +19,9 @@
 </head>
 <body class="dashboardbody">
 <div class="dashboard-menu">
-    <?php include 'dashboardmenu.php'; ?>
+    <div id="includedFileContainer">
+        <?php include 'dashboardmenu.php'; ?>
+    </div>
 </div>
 <div class="details-container">
     <div class="product-details-more">
@@ -45,7 +47,7 @@
             </div>
             <p style="vertical-align: -200px;display: inline-block;font-size: 17px">Ilość</p>
             <input style="vertical-align: -200px; padding: 20px" type="number" name="quantity" id="quantity" min="1" max="<?php echo $row['onStock']; ?>" value="1">
-            <button class="add-to-cart">DODAJ DO KOSZYKA</button>
+            <button class="add-to-cart" onclick="addToCart(<?php echo $productCode; ?>)">DODAJ DO KOSZYKA</button>
             <?php
         } else {
             echo "<p>Product not found.</p>";
@@ -54,6 +56,9 @@
     </div>
 
 </div>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="scripts.js"></script>
+
 <style>
     .details-container{
         display: inline-block;

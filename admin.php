@@ -10,7 +10,7 @@
     }
     require_once "functions.php";
     require_once "config.php";
-    if (!$isAdmin) {
+    if ($isAdmin=="f") {
         header("location: dashboard.php");
     }
     ?>
@@ -152,7 +152,8 @@
                 salespersonID: salespersonID
             },
             success: function(response) {
-                console.log(response);
+                alert(response);
+
             }
         });
     });
@@ -172,6 +173,7 @@
             },
             success: function(response) {
                 console.log(response);
+                alert("Hasło zostało zmienione");
             }
         });
     });
@@ -186,8 +188,11 @@
                 companyID: companyID
             },
             success: function(response) {
-
                 console.log(response);
+                alert("Usunięto klienta!");
+            },
+            error: function(response) {
+                alert(response);
             }
         });
     });
@@ -219,6 +224,10 @@
             },
             success: function(response) {
                 console.log(response);
+                alert("Dodano użytkownika!");
+            },
+            error: function(response) {
+                alert("Taki użytkownik już istnieje!");
             }
         });
     });

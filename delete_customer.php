@@ -9,6 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $deleteCustomerResult = pg_query_params($link, $deleteCustomerQuery, $deleteCustomerParams);
 
     if ($deleteCustomerResult) {
+        http_response_code(200);
         echo "Usunięto klienta";
     } else {
         echo "Wystąpił błąd przy usuwaniu klienta";

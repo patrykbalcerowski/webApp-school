@@ -20,18 +20,7 @@ $shopCart = pg_query($link, "SELECT \"productName\", \"unitPrize\", \"img\", \"u
 $row = pg_query($link, "SELECT COUNT(\"cartID\") as num FROM products as p JOIN \"shoppingCart\" as s on p.\"productCode\"=s.\"productCode\" JOIN \"users\" as u on s.\"userID\"=u.\"userID\"  WHERE s.\"userID\" = '$userID';");
 $shopCartCount = pg_fetch_result($row,0,0);
 $products = pg_query($link,"SELECT * FROM products;");
+$orderlist = pg_query($link, "SELECT *  FROM orders WHERE \"userID\" = '$userID';");
 
 
 
-//if(!$result){
-//    $response = array('success' => false);
-//    $_SESSION['loggedin']=false;
-//    echo "Niepoprawne dane";
-//    return;
-//}
-//if(pg_num_rows($result)==0){
-//    $response = array('success' => false);
-//    $_SESSION['loggedin']=false;
-//    echo "Błędna nazwa użytkownika lub ID";
-//    return;
-//}

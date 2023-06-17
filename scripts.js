@@ -19,7 +19,7 @@ $(document).ready(function() {
 // wyszukaj produkty
 function searchProducts(query) {
     $.ajax({
-        url: 'search_products.php', // Replace with the actual search endpoint URL
+        url: 'search_products.php',
         type: 'GET',
         data: { query: query },
         success: function(response) {
@@ -32,6 +32,7 @@ function searchProducts(query) {
         }
     });
 }
+
 //usuwanie z koszyka
 function removeFromCart(cartID) {
     console.log(cartID);
@@ -55,7 +56,7 @@ function refreshIncludedFile(callback) {
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             document.getElementById("includedFileContainer").innerHTML = this.responseText;
-            callback(); // Call the callback function after updating the container
+            callback();
         }
     };
     xhttp.open("GET", "dashboardmenu.php", true);
@@ -64,10 +65,12 @@ function refreshIncludedFile(callback) {
 
 //dodaj do koszyka
 function addToCart(productCode) {
+    var quantityElement = document.getElementById('quantity');
+    var quantity = quantityElement ? quantityElement.value : 1;
     $.ajax({
         url: 'add_to_cart.php',
         type: 'POST',
-        data: { productCode: productCode },
+        data: { productCode: productCode, quantity:quantity },
         success: function(response) {
             console.log(response);
             refreshIncludedFile(function() {
@@ -76,8 +79,15 @@ function addToCart(productCode) {
         },
         error: function(xhr, status, error) {
             console.error('Error: ' + error);
+            refreshIncludedFile(function () {
+                showMessage("Osiągnięto maksimum!");
+            })
         }
     });
+}
+function placeOrder() {
+
+    window.location.href = "order.php";
 }
 function showMessage(message) {
     var messageContainer = document.getElementById("message-container");

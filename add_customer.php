@@ -11,12 +11,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Insert the customer into the database
     $insertCustomerQuery = "INSERT INTO \"Customers\" (\"companyName\", \"NIP\", \"street\", \"postalCode\", \"city\", \"staffID\",\"payLimit\")
-                            VALUES ($1, $2, $3, $4, $5, $6, $7)";
+                            VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING \"companyID\"";
     $insertCustomerParams = array($companyName, $companyNIP, $companyStreet, $companyPostalCode, $companyCity, $salespersonID, 2000);
     $insertCustomerResult = pg_query_params($link, $insertCustomerQuery, $insertCustomerParams);
 
     if ($insertCustomerResult) {
-        echo "Dodano klienta";
+        $insertCustomerResult=pg_fetch_result($insertCustomerResult,0,0);
+        http_response_code(200);
+        echo "Dodano klienta. ID: ".$insertCustomerResult .".";
     } else {
         echo "Wystąpił błąd przy dodawaniu klienta";
     }
