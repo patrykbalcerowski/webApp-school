@@ -39,11 +39,11 @@ if ($deliveryType === "customer" && $newAddressCheckbox) {
         $invoiceResult = pg_query_params($link, $invoiceQuery, $insertUserParams);
         $invoiceID = pg_fetch_result($invoiceResult,0,0);
 
+        $currentDate = date('Y-m-d');
 
-
-        $orderQuery = 'INSERT INTO "orders" ("userID", "invoiceID","addressID")
-                     VALUES ($1,$2,$3) RETURNING "orderID"';
-        $insertUserParams = array($userID,$invoiceID,$addressID);
+        $orderQuery = 'INSERT INTO "orders" ("userID", "invoiceID","addressID","orderDate")
+                     VALUES ($1,$2,$3,$4) RETURNING "orderID"';
+        $insertUserParams = array($userID,$invoiceID,$addressID,$currentDate);
         $orderResult = pg_query_params($link, $orderQuery, $insertUserParams);
         $orderId = pg_fetch_result($orderResult,0,0);
 
@@ -129,10 +129,10 @@ if ($deliveryType === "customer" && $newAddressCheckbox) {
         $invoiceID = pg_fetch_result($invoiceResult,0,0);
 
 
-
-        $orderQuery = 'INSERT INTO "orders" ("userID", "invoiceID","addressID")
-                     VALUES ($1,$2,$3) RETURNING "orderID"';
-        $insertUserParams = array($userID,$invoiceID,$addressID);
+        $currentDate = date('Y-m-d');
+        $orderQuery = 'INSERT INTO "orders" ("userID", "invoiceID", "addressID", "orderDate")
+               VALUES ($1, $2, $3, $4) RETURNING "orderID"';
+        $insertUserParams = array($userID, $invoiceID, $addressID, $currentDate);
         $orderResult = pg_query_params($link, $orderQuery, $insertUserParams);
         $orderId = pg_fetch_result($orderResult,0,0);
 
@@ -207,10 +207,10 @@ if ($deliveryType === "customer" && $newAddressCheckbox) {
         $insertUserParams = array($companyID, 100);
         $invoiceResult = pg_query_params($link, $invoiceQuery, $insertUserParams);
         $invoiceID = pg_fetch_result($invoiceResult,0,0);
-
-        $orderQuery = 'INSERT INTO "orders" ("userID", "invoiceID","addressID")
-                     VALUES ($1,$2,$3) RETURNING "orderID"';
-        $insertUserParams = array($userID,$invoiceID,$addressID);
+        $currentDate = date('Y-m-d');
+        $orderQuery = 'INSERT INTO "orders" ("userID", "invoiceID","addressID","orderDate")
+                     VALUES ($1,$2,$3,$4) RETURNING "orderID"';
+        $insertUserParams = array($userID,$invoiceID,$addressID,$currentDate);
         $orderResult = pg_query_params($link, $orderQuery, $insertUserParams);
         $orderId = pg_fetch_result($orderResult,0,0);
 

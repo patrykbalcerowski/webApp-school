@@ -248,5 +248,12 @@
         font-weight: bolder;
         padding: 10px;
     }
+    button{
+        padding: 5px;
+        background-color: #4CAF50;
+        font-size: medium;
+        font-weight: bolder;
+        color: white;
+    }
 </style>
 </html>

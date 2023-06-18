@@ -16,11 +16,7 @@ if (!$link) {
     $pass = $_POST['password'];
     $pass = substr($pass, 0, 20);
     $id = $_POST['id'];
-
-
     $pass_hash = sha1(md5($pass . $pass));
-
-
     $result = pg_query_params($link, "SELECT \"userID\", username, password FROM users WHERE \"companyID\" = $1 AND username = $2", array($id, $login));
 
     if (!$result) {
